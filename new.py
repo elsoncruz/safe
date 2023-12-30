@@ -3,15 +3,16 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
-from decouple import config
 
-def configure():
-    config()
+api={
+    "authorization":st.secrets["api_key"],
+    "content-type": "application/json"
+}
 
-embeddings = OpenAIEmbeddings(api_key=config('api_key'))
+embeddings = OpenAIEmbeddings(api_key=api)
 new_db = FAISS.load_local("faiss_index", embeddings)
 
-llm = ChatOpenAI(api_key=config('api_key'))
+llm = ChatOpenAI(api_key=api)
 qa_chain = RetrievalQA.from_chain_type(llm, retriever=new_db.as_retriever())
 
 def ask(user_query):
