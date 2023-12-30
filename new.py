@@ -4,15 +4,12 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.chat_models import ChatOpenAI
 
-api={
-    "authorization":st.secrets["api_key"],
-    "content-type": "application/json"
-}
+api_keyt = st.secrets["api"]["key"]
 
-embeddings = OpenAIEmbeddings(api_key=api)
+embeddings = OpenAIEmbeddings(api_key=api_keyt)
 new_db = FAISS.load_local("faiss_index", embeddings)
 
-llm = ChatOpenAI(api_key=api)
+llm = ChatOpenAI(api_key=api_keyt)
 qa_chain = RetrievalQA.from_chain_type(llm, retriever=new_db.as_retriever())
 
 def ask(user_query):
